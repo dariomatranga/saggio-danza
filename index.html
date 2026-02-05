@@ -1,11 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="it">
 <head>
 <meta charset="UTF-8">
-<title>Saggio Danza</title>
+<title>Saggio di Danza – Mappa Posti</title>
+<style>
+body{font-family:Arial;background:#111;color:#fff;text-align:center}
+.stage{margin:10px auto;padding:10px;background:#444;width:70%}
+.row{display:flex;justify-content:center;margin:4px}
+.seat{width:32px;height:32px;border-radius:50%;background:green;cursor:pointer;
+font-size:7px;display:flex;align-items:center;justify-content:center;margin:2px;text-align:center;padding:2px}
+.seat.occ{background:red}
+.gap{width:40px}
+.stats{margin:10px}
+</style>
 </head>
-<body style="background:#111;color:white;text-align:center;font-family:Arial">
-<h1>SAGGIO DI DANZA</h1>
-<p>Il sito è attivo 🎉</p>
+<body>
+
+<h2>SAGGIO DI DANZA</h2>
+<div class="stage">PALCO</div>
+<div class="stats">Liberi: <span id="free"></span> | Occupati: <span id="occ"></span></div>
+<div id="map"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyAHIKIeooKisDjAI0QPOt7D7-haEfP3FS8",
+  authDomain: "saggio-danza.firebaseapp.com",
+  databaseURL: "https://saggio-danza-default-rtdb.firebaseio.com",
+  projectId: "saggio-danza",
+  storageBucket: "saggio-danza.firebasestorage.app",
+  messagingSenderId: "79139727344",
+  appId: "1:79139727344:web:32155f7aa44a0c3d43df35"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// QUI METTEREMO TUTTA LA PIANTINA DOPO
+const layout = [
+ ["A1","A2","A3","A4","|","B1","B2","B3","B4"],
+ ["A5","A6","A7","A8","|","B5","B6","B7","B8"]
+];
+
+const map = document.getElementById("map");
+
+function render(data={}){
+ map.innerHTML="";
+ let free=0, occ=0;
+ layout.forEach(r=>{
+   let row=document.createElement("div"); row.className="row";
+   r.forEach(s=>{
+     if(s==="|"){
+       let g=document.createElement("div"); g.className="gap"; row.appendChild(g);
+     } else {
+       let d=document.createElement("div"); d.className="seat";
+       if(data[s]){
+         d.classList.add("occ");
+         d.innerText=data[s];
+         occ++;
+       } else {
+         d.innerText=s;
+         free++;
+       }
+       d.onclick=()=>{
+         if(d.classList.contains("occ")){
+           if(confirm("OK = libera | ANNULLA = sposta")){
+             db.ref("seats/"+s).remove();
+           }
+         } else {
+           let name = prompt("Cognome:");
+           if(name) db.ref("seats/"+s).set(name);
+         }
+       };
+       row.appendChild(d);
+     }
+   });
+   map.appendChild(row);
+ });
+ document.getElementById("free").innerText=free;
+ document.getElementById("occ").innerText=occ;
+}
+
+db.ref("seats").on("value",snap=>render(snap.val()||{}));
+</script>
+
 </body>
 </html>
