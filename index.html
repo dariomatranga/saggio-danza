@@ -5,44 +5,16 @@
 <title>Saggio di Danza – Piantina</title>
 
 <style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f4f4f4;
-}
-
-#map{
-  position:relative;
-  width:100%;
-  max-width:900px;
-  margin:auto;
-}
-
-#bg{
-  width:100%;
-  display:block;
-}
-
+body{font-family:Arial;background:#f4f4f4;}
+#map{position:relative;width:100%;max-width:900px;margin:auto;}
+#bg{width:100%;display:block;}
 .seat{
-  position:absolute;
-  width:22px;
-  height:22px;
-  border-radius:50%;
-  background:#2ecc71;
-  color:white;
-  font-size:9px;
-  text-align:center;
-  line-height:22px;
-  cursor:move;
-  user-select:none;
+  position:absolute;width:22px;height:22px;border-radius:50%;
+  background:#2ecc71;color:#fff;font-size:9px;text-align:center;
+  line-height:22px;cursor:move;user-select:none;
 }
-
-.occ{ background:#e74c3c; }
-
-#stage{
-  text-align:center;
-  font-weight:bold;
-  margin:10px;
-}
+.occ{background:#e74c3c;}
+#stage{text-align:center;font-weight:bold;margin:10px;}
 </style>
 </head>
 
@@ -55,51 +27,65 @@ body{
 </div>
 
 <script>
-let current = null;
+let current=null;
 
-const seats = [
-  {id:"A1", x:120, y:140},
-  {id:"A2", x:160, y:138},
-  {id:"A3", x:200, y:136},
-  {id:"A4", x:240, y:134},
-  {id:"A5", x:280, y:132},
-  {id:"A6", x:320, y:130},
-  {id:"A7", x:360, y:128},
-  {id:"A8", x:400, y:126},
-
-  {id:"B1", x:520, y:126},
-  {id:"B2", x:560, y:128},
-  {id:"B3", x:600, y:130},
-  {id:"B4", x:640, y:132},
-  {id:"B5", x:680, y:134},
-  {id:"B6", x:720, y:136},
-  {id:"B7", x:760, y:138},
-  {id:"B8", x:800, y:140}
+// GUIDE (A1–A8 e B1–B8 che hai sistemato)
+const guideA=[
+ {x:120,y:140},{x:160,y:138},{x:200,y:136},{x:240,y:134},
+ {x:280,y:132},{x:320,y:130},{x:360,y:128},{x:400,y:126}
+];
+const guideB=[
+ {x:520,y:126},{x:560,y:128},{x:600,y:130},{x:640,y:132},
+ {x:680,y:134},{x:720,y:136},{x:760,y:138},{x:800,y:140}
 ];
 
-const map = document.getElementById("map");
+// distanza tra le file
+const rowStep=38;
+
+let seats=[];
+
+// A e B (11 righe)
+for(let r=0;r<11;r++){
+  guideA.forEach((p,i)=>{
+    seats.push({id:"A"+(r*8+i+1),x:p.x,y:p.y+r*rowStep});
+  });
+  guideB.forEach((p,i)=>{
+    seats.push({id:"B"+(r*8+i+1),x:p.x,y:p.y+r*rowStep});
+  });
+}
+
+// C e D (sotto, più centrali)
+for(let r=0;r<11;r++){
+  guideA.forEach((p,i)=>{
+    seats.push({id:"C"+(r*8+i+2),x:p.x+60,y:p.y+11*rowStep+r*rowStep});
+  });
+  guideB.forEach((p,i)=>{
+    seats.push({id:"D"+(r*8+i+1),x:p.x-60,y:p.y+11*rowStep+r*rowStep});
+  });
+}
+
+const map=document.getElementById("map");
 
 seats.forEach(s=>{
-  const d = document.createElement("div");
-  d.className = "seat";
-  d.style.left = s.x + "px";
-  d.style.top  = s.y + "px";
-  d.textContent = s.id;
+  const d=document.createElement("div");
+  d.className="seat";
+  d.style.left=s.x+"px";
+  d.style.top =s.y+"px";
+  d.textContent=s.id;
 
-  d.onmousedown = () => current = d;
-  d.onclick = () => d.classList.toggle("occ");
+  d.onmousedown=()=>current=d;
+  d.onclick=()=>d.classList.toggle("occ");
 
   map.appendChild(d);
 });
 
-document.onmousemove = e => {
-  if(!current) return;
-  const rect = map.getBoundingClientRect();
-  current.style.left = (e.clientX - rect.left - 11) + "px";
-  current.style.top  = (e.clientY - rect.top  - 11) + "px";
+document.onmousemove=e=>{
+  if(!current)return;
+  const r=map.getBoundingClientRect();
+  current.style.left=(e.clientX-r.left-11)+"px";
+  current.style.top =(e.clientY-r.top -11)+"px";
 };
-
-document.onmouseup = () => current = null;
+document.onmouseup=()=>current=null;
 </script>
 
 </body>
