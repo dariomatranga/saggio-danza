@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>Saggio di Danza – Mappa Posti</title>
 <style>
-body<div id="stage">PALCO</div>
+  body<div id="stage">PALCO</div>
 <div id="map">
   <img src="piantina.jpg" id="bg">
 </div>
@@ -45,6 +45,40 @@ font-size:7px;display:flex;align-items:center;justify-content:center;margin:2px;
 }
 
 </head>
+  <script>
+const seats = [
+  {id:"A1", x:120, y:140},
+  {id:"A2", x:160, y:138},
+  {id:"A3", x:200, y:136},
+  {id:"A4", x:240, y:134},
+  {id:"A5", x:280, y:132},
+  {id:"A6", x:320, y:130},
+  {id:"A7", x:360, y:128},
+  {id:"A8", x:400, y:126},
+
+  {id:"B1", x:520, y:126},
+  {id:"B2", x:560, y:128},
+  {id:"B3", x:600, y:130},
+  {id:"B4", x:640, y:132},
+  {id:"B5", x:680, y:134},
+  {id:"B6", x:720, y:136},
+  {id:"B7", x:760, y:138},
+  {id:"B8", x:800, y:140},
+];
+
+const map = document.getElementById("map");
+
+seats.forEach(s=>{
+  const d=document.createElement("div");
+  d.className="seat";
+  d.style.left=s.x+"px";
+  d.style.top=s.y+"px";
+  d.textContent=s.id;
+  d.onclick=()=>d.classList.toggle("occ");
+  map.appendChild(d);
+});
+</script>
+
 <body>
 
 <h2>SAGGIO DI DANZA</h2>
