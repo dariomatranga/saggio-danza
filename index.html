@@ -55,6 +55,7 @@ body{
 </div>
 
 <script>
+let current = null;
 const seats = [
   {id:"A1", x:120, y:140},
   {id:"A2", x:160, y:138},
@@ -74,6 +75,32 @@ const seats = [
   {id:"B7", x:760, y:138},
   {id:"B8", x:800, y:140}
 ];
+
+const map = document.getElementById("map");
+
+seats.forEach(s=>{
+  const d=document.createElement("div");
+  d.className="seat";
+  d.style.left=s.x+"px";
+  d.style.top=s.y+"px";
+  d.textContent=s.id;
+
+  d.onmousedown = () => current = d;
+  d.onclick = () => d.classList.toggle("occ");
+
+  map.appendChild(d);
+});
+
+document.onmousemove = e => {
+  if(!current) return;
+  const rect = map.getBoundingClientRect();
+  current.style.left = (e.clientX - rect.left - 11) + "px";
+  current.style.top  = (e.clientY - rect.top  - 11) + "px";
+};
+
+document.onmouseup = () => current = null;
+</script>
+
 
 const map = document.getElementById("map");
 
