@@ -32,7 +32,7 @@ body{
   font-size:9px;
   text-align:center;
   line-height:22px;
-  cursor:pointer;
+  cursor:move;
   user-select:none;
 }
 
@@ -56,6 +56,7 @@ body{
 
 <script>
 let current = null;
+
 const seats = [
   {id:"A1", x:120, y:140},
   {id:"A2", x:160, y:138},
@@ -79,11 +80,11 @@ const seats = [
 const map = document.getElementById("map");
 
 seats.forEach(s=>{
-  const d=document.createElement("div");
-  d.className="seat";
-  d.style.left=s.x+"px";
-  d.style.top=s.y+"px";
-  d.textContent=s.id;
+  const d = document.createElement("div");
+  d.className = "seat";
+  d.style.left = s.x + "px";
+  d.style.top  = s.y + "px";
+  d.textContent = s.id;
 
   d.onmousedown = () => current = d;
   d.onclick = () => d.classList.toggle("occ");
@@ -99,20 +100,6 @@ document.onmousemove = e => {
 };
 
 document.onmouseup = () => current = null;
-</script>
-
-
-const map = document.getElementById("map");
-
-seats.forEach(s=>{
-  const d=document.createElement("div");
-  d.className="seat";
-  d.style.left=s.x+"px";
-  d.style.top=s.y+"px";
-  d.textContent=s.id;
-  d.onclick=()=>d.classList.toggle("occ");
-  map.appendChild(d);
-});
 </script>
 
 </body>
